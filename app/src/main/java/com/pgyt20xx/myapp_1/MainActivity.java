@@ -90,6 +90,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             Fragment fragment = new SectionFragment();
             Bundle args = new Bundle();
             args.putInt(SectionFragment.ARG_SECTION_NUMBER, position + 1);
+            fragment.setArguments(args);
             return fragment;
         }
 
