@@ -20,9 +20,11 @@
 
     <style name="Theme.Base" parent="android:Theme.Light" />
 
-    <style name="Theme.Sample" parent="Theme.Base" />
+    <style name="Theme.AppCompat" parent="Theme.AppCompat.Light" />
 
-    <style name="AppTheme" parent="Theme.Sample" />
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar" />-->
+    <style name="_AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"/>
+    <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert"/>
     <!-- Widget styling -->
 
     <style name="Widget" />

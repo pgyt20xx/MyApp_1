@@ -35,12 +35,12 @@ public class DBHelper {
         }
     }
 
-    public void insertCategory(SQLiteDatabase db, CategoryBean params){
-        db.insert(TABLE_NAME_CATEGORY, BLANK_STRING, params.getParams());
+    public void insertCategory(CategoryBean params){
+        this.sqLiteDatabase.insert(TABLE_NAME_CATEGORY, BLANK_STRING, params.getParams());
     }
 
-    public void insertContents(SQLiteDatabase db, ContentsBean params){
-        db.insert(TABLE_NAME_CONTENTS, BLANK_STRING, params.getParams());
+    public void insertContents(ContentsBean params){
+        this.sqLiteDatabase.insert(TABLE_NAME_CONTENTS, BLANK_STRING, params.getParams());
     }
 
     public void cleanup(){

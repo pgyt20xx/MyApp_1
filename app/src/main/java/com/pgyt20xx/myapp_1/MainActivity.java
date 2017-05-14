@@ -1,15 +1,22 @@
 package com.pgyt20xx.myapp_1;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.pgyt20xx.myapp_1.model.CategoryBean;
@@ -22,18 +29,23 @@ public class MainActivity extends FragmentActivity {
 
     ViewPager mViewPager;
 
+    DBHelper dBhelper = null;
+
     /**
      * デフォルトタブ
      */
     private static int PAGE_COUNT = 0;
 
+    /**
+     * タグ:MainActivity
+     */
     private static String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DBHelper dBhelper = null;
+
         try {
             dBhelper = new DBHelper(this.getApplicationContext());
 
@@ -48,6 +60,35 @@ public class MainActivity extends FragmentActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+    }
+
+    /**
+     * タイトルバーにメニューボタンを表示
+     * @param menu
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.manu_main, menu);
+        return true;
+    }
+
+    /**
+     * メニューボタン押下時
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+
+        // 押下されたメニューで分岐
+        switch (item.getItemId()){
+            case R.id.item1:
+                createDialogEvent();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -94,5 +135,36 @@ public class MainActivity extends FragmentActivity {
             return rootView;
 
         }
+    }
+
+    private void createDialogEvent(){
+        final EditText editView = new EditText(MainActivity.this);
+
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this, R.style.MyAlertDialogStyle);
+        dialog.setTitle(R.string.menu_item1);
+        dialog.setView(editView);
+
+        // OKボタン押下時
+        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // 値が入力された場合はDBに登録
+                if(!TextUtils.isEmpty(editView.getText())){
+                    CategoryBean param = new CategoryBean();
+                    param.setCategory_name(editView.getText().toString());
+                    dBhelper.insertCategory(param);
+                }
+            }
+        });
+
+        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+            // Cancelボタン押下時
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton){
+
+            }
+        });
+
+        dialog.show();
     }
 }
