@@ -2,6 +2,7 @@ package com.pgyt20xx.myapp_1;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 
@@ -35,10 +36,18 @@ public class DBHelper {
         }
     }
 
+    /**
+     * カテゴリーテーブルのインサート文
+     * @param params
+     */
     public void insertCategory(CategoryBean params){
         this.sqLiteDatabase.insert(TABLE_NAME_CATEGORY, BLANK_STRING, params.getParams());
     }
 
+    /**
+     * コンテンツテーブルのインサート文
+     * @param params
+     */
     public void insertContents(ContentsBean params){
         this.sqLiteDatabase.insert(TABLE_NAME_CONTENTS, BLANK_STRING, params.getParams());
     }
@@ -48,6 +57,24 @@ public class DBHelper {
             this.sqLiteDatabase.close();
             this.sqLiteDatabase = null;
         }
+    }
+
+    /**
+     * カテゴリーテーブルのセレクト文
+     * @param param
+     * @return
+     */
+    public Cursor selectCategory(String param){
+        SQLiteDatabase readDb = dbOpenHelper.getReadableDatabase();
+        Cursor cursor = null;
+        if(param.isEmpty()){
+            String sql = "SELECT id, category_name FROM CATEGORY;";
+            cursor = readDb.rawQuery(sql, null);
+        }else{
+            String sql = "SELECT id, category_name FROM CATEGORY WHERE category_name = '" + param + "';";
+            cursor = readDb.rawQuery(sql, new String[]{param});
+        }
+        return cursor;
     }
 
     public boolean isDatabaseDelete (final Context context){

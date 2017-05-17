@@ -1,6 +1,7 @@
 package com.pgyt20xx.myapp_1;
 
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -36,6 +37,8 @@ public class MainActivity extends FragmentActivity {
      */
     private static int PAGE_COUNT = 0;
 
+    private static String BLANK_STRING = "";
+
     /**
      * タグ:MainActivity
      */
@@ -45,13 +48,15 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        Cursor cursor = null;
         try {
             dBhelper = new DBHelper(this.getApplicationContext());
+            cursor = dBhelper.selectCategory(BLANK_STRING);
 
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());
         }
+        PAGE_COUNT = cursor.getCount();
 
         setContentView(R.layout.activity_main);
 
@@ -64,11 +69,12 @@ public class MainActivity extends FragmentActivity {
 
     /**
      * タイトルバーにメニューボタンを表示
+     *
      * @param menu
      * @return
      */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.manu_main, menu);
         return true;
@@ -76,14 +82,15 @@ public class MainActivity extends FragmentActivity {
 
     /**
      * メニューボタン押下時
+     *
      * @param item
      * @return
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
 
         // 押下されたメニューで分岐
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.item1:
                 createDialogEvent();
                 return true;
@@ -97,6 +104,7 @@ public class MainActivity extends FragmentActivity {
             super(fm);
         }
 
+        // TODO 取得したコンテンツテーブルのpositionのcontents_nameをタイトルに設定する。
         @Override
         public Fragment getItem(int position) {
 
@@ -122,22 +130,34 @@ public class MainActivity extends FragmentActivity {
 
         public static final String ARG_SECTION_NUMBER = "section_number";
 
+        DBHelper dBhelper = null;
+
         public SectionFragment() {
 
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
-
+//            try {
+//                dBhelper = new DBHelper(getActivity());
+//
+//            } catch (Exception e) {
+//                Log.d(TAG, e.getMessage());
+//            }
+//
+//            Cursor cursor = dBhelper.selectCategory(null);//
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
+//            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+//            textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
 
         }
     }
 
-    private void createDialogEvent(){
+    /**
+     * ダイアログイベント
+     */
+    private void createDialogEvent() {
         final EditText editView = new EditText(MainActivity.this);
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this, R.style.MyAlertDialogStyle);
@@ -149,7 +169,7 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 // 値が入力された場合はDBに登録
-                if(!TextUtils.isEmpty(editView.getText())){
+                if (!TextUtils.isEmpty(editView.getText())) {
                     CategoryBean param = new CategoryBean();
                     param.setCategory_name(editView.getText().toString());
                     dBhelper.insertCategory(param);
@@ -157,10 +177,10 @@ public class MainActivity extends FragmentActivity {
             }
         });
 
-        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             // Cancelボタン押下時
             @Override
-            public void onClick(DialogInterface dialog, int whichButton){
+            public void onClick(DialogInterface dialog, int whichButton) {
 
             }
         });
