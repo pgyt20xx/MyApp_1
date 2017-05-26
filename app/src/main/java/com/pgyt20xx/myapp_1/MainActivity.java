@@ -18,11 +18,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.pgyt20xx.myapp_1.model.CategoryBean;
 
-import java.util.Locale;
+import java.util.ArrayList;
 
 public class MainActivity extends FragmentActivity {
 
@@ -38,6 +37,9 @@ public class MainActivity extends FragmentActivity {
     private static int PAGE_COUNT = 0;
 
     private static String BLANK_STRING = "";
+
+    private static ArrayList<String> TITLE_NAME = new ArrayList<>();
+
 
     /**
      * タグ:MainActivity
@@ -56,7 +58,17 @@ public class MainActivity extends FragmentActivity {
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());
         }
+
+        // 取得したレコードの件数がページ数
         PAGE_COUNT = cursor.getCount();
+
+        // 登録されているカテゴリー名を保持する
+        boolean isEof = cursor.moveToFirst();
+        while(isEof){
+            TITLE_NAME.add(cursor.getString(cursor.getColumnIndex("category_name")));
+            isEof = cursor.moveToNext();
+        }
+        cursor.close();
 
         setContentView(R.layout.activity_main);
 
@@ -107,7 +119,7 @@ public class MainActivity extends FragmentActivity {
         // TODO 取得したコンテンツテーブルのpositionのcontents_nameをタイトルに設定する。
         @Override
         public Fragment getItem(int position) {
-
+            setTitle(TITLE_NAME.get(position));
             Fragment fragment = new SectionFragment();
             Bundle args = new Bundle();
             args.putInt(SectionFragment.ARG_SECTION_NUMBER, position + 1);
