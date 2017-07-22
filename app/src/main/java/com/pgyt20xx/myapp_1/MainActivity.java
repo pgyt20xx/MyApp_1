@@ -188,9 +188,8 @@ public class MainActivity extends FragmentActivity {
                 }
             }
         });
-
+        // Cancelボタン押下時
         dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            // Cancelボタン押下時
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
 
